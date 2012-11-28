@@ -1,0 +1,17 @@
+TODO list:
+	NETWORK:
+		- finish fixing client-server authentication
+		- send back player position in AUTHR response from server
+		- implement ongoing re-authentication procedures
+		- implement automatic re-connection for disconnected clients, with attempt limit and:
+			- implement "disconnected" messages on the client, allowing user to attempt reconnection without restarting client
+	GRAPHICS:
+		- create login screen background image (placeholder)
+		- create terrain (placeholder)
+		- load world based on player position received from server
+
+DONE list:
+
+name ideas:
+	- Citizens [working title]
+	- Society

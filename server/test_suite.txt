@@ -1,0 +1,21 @@
+echo [TEST] testing set command:
+set non_fatal_errors on
+fe non-fatal error test!
+set non_fatal_errors off
+
+echo [TEST] testing list accounts:
+list accounts
+
+echo [TEST] testing add:
+add newuser monkeylove
+
+echo [TEST] testing quit:
+quit
+
+echo quit didn't work, trying with 'kill'
+kill
+
+echo kill didn't work either, trying with 'fe'
+fe test suite reached end without server quitting!
+
+echo oh fuck.  try hitting ^C

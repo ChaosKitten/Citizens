@@ -1,0 +1,7 @@
+date : 2012 June 9th
+mapname : losttemple.bsp
+author : a13xoloid
+theme : gothic
+gametype : ctf(duel)
+bot : yes
+texture : yes

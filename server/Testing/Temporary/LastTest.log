@@ -1,0 +1,33 @@
+Start testing: Nov 23 06:55 CET
+----------------------------------------------------------
+1/1 Testing: test
+1/1 Test: test
+Command: "/home/miranda/ChaosKitten/Citizens/src/server/test.sh"
+Directory: /home/miranda/ChaosKitten/Citizens/src/server
+"test" start time: Nov 23 06:55 CET
+Output:
+----------------------------------------------------------
+Loading configuration file: test.conf
+[[1;34mINFO[0m] Starting server thread in no-restart mode
+[[1;34mINFO[0m] Server started
+[[1;34mINFO[0m] Starting in batch mode
+[[1;34mINFO[0m] Opening batch file test_suite.txt
+[TEST] testing set command: 
+[[1;34mINFO[0m] non_fatal_errors = on
+[[1;31mERROR[0m] Error: non-fatal error test! 
+[[1;34mINFO[0m] non_fatal_errors = off
+[TEST] testing list accounts: 
+[[1;34mINFO[0m] Accounts:
+[TEST] testing add: 
+[[1;33mWARNING[0m] Database error: duplicate user
+[TEST] testing quit: 
+[[1;34mINFO[0m] Shutting down
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"test" end time: Nov 23 06:55 CET
+"test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 23 06:55 CET

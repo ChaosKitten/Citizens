@@ -1,0 +1,18 @@
+CREATE SCHEMA IF NOT EXISTS `citizens`;
+USE `citizens`;
+
+DROP TABLE IF EXISTS `accounts`;
+CREATE TABLE `accounts` (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	username VARCHAR(16),
+	auth VARCHAR(128),
+	UNIQUE(username)
+);
+
+DROP TABLE IF EXISTS `citizens`;
+CREATE TABLE `citizens` (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	username VARCHAR(16),
+	online BOOLEAN,
+	role TEXT
+);
