@@ -16,17 +16,40 @@
 
 using namespace Citizens;
 
+/**
+ * \brief constructs an SFMLNetwork object
+ * \param[in] p a Protocol reference
+ * \note in future the Protocol class may be made 100% static and therefore
+ * references to it will be somewhat meaningless and wasteful, this
+ * is one area for clean-up if that ever becomes the case
+ */
 SFMLNetwork::SFMLNetwork(const Protocol& p) : protocol(p), disconnected(true) 
 {
 	socket = new sf::TcpSocket();
 	socket->setBlocking(true);
 }
 
+/**
+ * \brief deletes the local 'socket' representation
+ * \note in future versions this destructor may be deleted as the socket
+ * should not be a pointer, it was only changed to a pointer while I was
+ * experimenting with something
+ */
 SFMLNetwork::~SFMLNetwork()
 {
 	delete socket;
 }
 
+/**
+ * \brief abstraction for establishing connection
+ * \details little more than a wrapper around sf::TcpSocket::connect()
+ * in future versions it may send a command to the server to verify
+ * things like version matching
+ * \param[in] ip the ip of the server to attempt connection with
+ * \return a boolean representing whether or not a connection was
+ * established.
+ * \note modifies the 'disconnected' status of the network
+ */
 bool SFMLNetwork::connect(const std::string& ip)
 {
 	bool success = false; // assume false unless proven otherwise
@@ -39,6 +62,18 @@ bool SFMLNetwork::connect(const std::string& ip)
 	return success;
 }
 
+/**
+ * \brief abstraction for sending a packet across the network
+ * \details sends a packet across the network, obviously.  Note that
+ * in future versions the parameter list may be switched for a single
+ * Packet& parameter
+ * \param[in] c the NetworkCommand for the packet
+ * \param[in] payload_length the length of the payload of the packet (expected to be correct)
+ * \param[in] msg a std::string containin the payload (far from the best way of doing it, I know)
+ * \return a bool indicating whether the packet was successfully sent or not
+ * note that the return status does not mean to imply whether or not the packet 
+ * was received or not, only whether it was sent.
+ */
 bool SFMLNetwork::send(NetworkCommand c,char payload_length,const std::string& msg)
 {
 	bool success = false;
@@ -71,6 +106,14 @@ bool SFMLNetwork::send(NetworkCommand c,char payload_length,const std::string& m
 	return success;
 }
 
+/**
+ * \brief fetch a packet from the network (a lot more complex than that)
+ * \details expects the passed-in Packet to have enough space allocated
+ * for the payload*.  If not enough space is allocated, a buffer overrun is possible
+ * This is a known bug, which will be fixed in a later version.
+ * \warning buffer overrun
+ * \param[out] packet that is completely overwritten by the function (all fields are modified)
+ */
 bool SFMLNetwork::receive(Packet& packet)
 {
 	bool success = true;
@@ -141,34 +184,21 @@ bool SFMLNetwork::receive(Packet& packet)
 	
 	return success;
 }
-/*
-bool SFMLNetwork::receive(unsigned char* buf,unsigned int size)
-{
-	bool success = true;
-	size_t received_bytes;
-	sf::Socket::Status status;
-	while((status = socket->receive(buf,size,received_bytes)) != sf::Socket::Done)
-	{
-		if(status == sf::Socket::Error)
-		{
-			error = "receive error";
-			success = false;
-			break;
-		}
-		else if(status == sf::Socket::Disconnected)
-		{
-			std::stringstream errs;
-			errs << "disconnected after " << received_bytes << " bytes";
-			error = errs.str();
-			success = false;
-			break;
-		}
-	}
-	disconnected = (status == sf::Socket::Disconnected);
-	
-	return success;
-}
-*/
+
+/**
+ * \brief This function is in charge of a lot, so I'm going to do my best to document it but forgive me if I don't catch everything.
+ * \details
+ * First, the client sends a "LOGIN" packet with the username in it.
+ * Next, the server replies with a "LOGIN" packet that contains a single byte of random data
+ * Next, the client is expected to encrypt the packet using a hash of the password (salted with the username - note that we may change the salt later if security becomes a problem)
+ * The resultant 16 bytes of encrypted data is sent back to the server in an AUTHR packet
+ * The server then compares the encrypted data with its own version of the same procedure, using a hash stored in the database as the encryption key
+ * The server will then respond with an AUTHR packet that has the payload "GOOD" or "BAD!" to indicate success or failure.
+ * There is no way for the client to tell whether it is the username or password which is wrong, so don't even try to program in that security hole
+ * \param[in] username pretty obvious really, preserves constness
+ * \param[in] password also obvious, also preserves constness
+ * \return a boolean indicating whether the login attempt was successful or not
+ */
 bool SFMLNetwork::login(const std::string& username, const std::string& password)
 {
 	bool success = false;
@@ -250,11 +280,19 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 	return success;
 }
 
+/**
+ * \brief returns whether the network has been disconnected
+ * \return a boolean indicating whether or not the network is disconnected
+ */
 bool SFMLNetwork::is_disconnected(void)
 {
 	return disconnected;
 }
 
+/**
+ * \brief get a string representation of the error status of the network
+ * \return a string representation of the error status of the network
+ */
 std::string SFMLNetwork::get_error(void)
 {
 	return error;
