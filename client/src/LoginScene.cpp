@@ -6,6 +6,12 @@ using namespace Citizens;
 // necessary, although the compiler doesn't even warn about it for some odd reason
 LoginScene::LoginScene(irr::scene::ISceneManager& sm) : scenemgr(sm) {}
 
+/**
+ * \brief initialises the scene
+ * \details sets up a camera, gui and a background image for the Login screen
+ * \param[in] config a Configuration reference we can use to ascertain
+ * things like the x and y resolution of the screen we're drawing to
+ */
 void LoginScene::init(const Configuration& config)
 {
 	irr::scene::ICameraSceneNode* camera = scenemgr.addCameraSceneNode();
@@ -147,6 +153,14 @@ void LoginScene::init(const Configuration& config)
 	
 }
 
+/**
+ * \brief I forget what this function is for, I think it was originally to
+ * shut the compiler up about 'scenemgr' being unused.  I think it's
+ * redundant now.  The only clue to its usage is a code comment
+ * that reads "I feel like a collosal dick for doing this, but oh well".
+ * Man, I should really get better at commenting things.
+ * \warning probably getting deleted sometime soon
+ */
 // I feel like a collosal dick for doing this, but oh well
 irr::scene::ISceneManager& LoginScene::operator()()
 {
