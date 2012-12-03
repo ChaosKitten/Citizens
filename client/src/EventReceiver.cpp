@@ -6,6 +6,19 @@ using namespace Citizens;
 
 EventReceiver::EventReceiver(GraphicsEngine& ge,irr::scene::ISceneManager& sm) : engine(ge),scenemgr(sm) {}
 
+/**
+ * \brief handles the event passed in
+ * \details this event handler function does not defer to any helper functions
+ * this design ought to change as the number of events handled grows
+ * you can see 3 nested 'switch' statements as a result of this bad design
+ * already, and it's only gonig to get worse
+ * \param[in] event the event that triggered the execution of this function
+ * \return a boolean representing whether or not the function was able to
+ * handle the event (so that instrumentation in code can report unhandled events)
+ * \note another ugly thing is that I used GCC extensions to turn off -Wswitch for this
+ * function only - fortunately, most non-GCC compilers should either ignore the #pragma
+ * directive or at worst issue a diagnostic about an unrecognised #pragma directive
+ */
 // ignore -Wswitch for this function, as there are lots of event types we just ignore
 #pragma GCC diagnostic ignored "-Wswitch"
 bool EventReceiver::OnEvent(const irr::SEvent& event)
