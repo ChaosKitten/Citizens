@@ -1,2 +1,0 @@
-/home/miranda/ChaosKitten/Citizens/src/server/CMakeFiles/citizend.dir
-/home/miranda/ChaosKitten/Citizens/src/server/CMakeFiles/doc.dir

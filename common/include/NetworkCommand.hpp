@@ -18,6 +18,7 @@ namespace Citizens
 	public:
 		NetworkCommand(const eNetworkCommand& e);
 		NetworkCommand(const std::string& v);
+		NetworkCommand() : value(ENC_INVALID) {}
 		operator std::string();
 		static const int length = 5;
 		bool operator ==(const eNetworkCommand& e) const { return (e == value); }

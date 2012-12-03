@@ -16,14 +16,23 @@
 
 using namespace Citizens;
 
-SFMLNetwork::SFMLNetwork(const Protocol& p) : protocol(p), disconnected(true) {}
+SFMLNetwork::SFMLNetwork(const Protocol& p) : protocol(p), disconnected(true) 
+{
+	socket = new sf::TcpSocket();
+	socket->setBlocking(true);
+}
+
+SFMLNetwork::~SFMLNetwork()
+{
+	delete socket;
+}
 
 bool SFMLNetwork::connect(const std::string& ip)
 {
 	bool success = false; // assume false unless proven otherwise
 	
 	sf::IpAddress server_ip(ip);
-	success = (socket.connect(server_ip,protocol.port) == sf::Socket::Done);
+	success = (socket->connect(server_ip,protocol.port) == sf::Socket::Done);
 	disconnected = !success;
 	if(!success) error = "connection attempt failed";
 	
@@ -41,7 +50,7 @@ bool SFMLNetwork::send(NetworkCommand c,char payload_length,const std::string& m
 	std::memcpy(data + NetworkCommand::length + 1,msg.c_str(),payload_length);
 	
 	sf::Socket::Status status;
-	while((status = socket.send(data,NetworkCommand::length + payload_length + 1)) != sf::Socket::Done)
+	while((status = socket->send(data,NetworkCommand::length + payload_length + 1)) != sf::Socket::Done)
 	{
 		if(status == sf::Socket::Error)
 		{
@@ -62,13 +71,83 @@ bool SFMLNetwork::send(NetworkCommand c,char payload_length,const std::string& m
 	return success;
 }
 
+bool SFMLNetwork::receive(Packet& packet)
+{
+	bool success = true;
+	
+	size_t received;
+	sf::Socket::Status status;
+	
+	char* command = (char*)std::malloc(NetworkCommand::length);
+	
+	while((status = socket->receive(command,NetworkCommand::length,received)) != sf::Socket::Done)
+	{
+		if(status == sf::Socket::Error)
+		{
+			error = "receive error";
+			success = false;
+			break;
+		}
+		else if(status == sf::Socket::Disconnected)
+		{
+			error = "disconnected";
+			success = false;
+			break;
+		}
+	}
+	
+	packet.command = (NetworkCommand)command;
+	std::free(command);
+	if(packet.command == ENC_INVALID)
+	{
+		error = "invalid command";
+		return false;
+	}
+	
+	unsigned char payload_size;
+	while((status = socket->receive(&payload_size,1,received)) != sf::Socket::Done)
+	{
+		if(status == sf::Socket::Error)
+		{
+			error = "receive error";
+			success = false;
+			break;
+		}
+		else if(status == sf::Socket::Disconnected)
+		{
+			error = "disconnected";
+			success = false;
+			break;
+		}
+	}
+	
+	packet.payload_size = (unsigned int) payload_size;
+	
+	while((status = socket->receive(packet.payload,packet.payload_size,received)) != sf::Socket::Done)
+	{
+		if(status == sf::Socket::Error)
+		{
+			error = "receive error";
+			success = false;
+			break;
+		}
+		else if(status == sf::Socket::Disconnected)
+		{
+			error = "disconnected";
+			success = false;
+			break;
+		}
+	}
+	
+	return success;
+}
+/*
 bool SFMLNetwork::receive(unsigned char* buf,unsigned int size)
 {
 	bool success = true;
 	size_t received_bytes;
-	size_t total_received;
 	sf::Socket::Status status;
-	while((status = socket.receive(buf,size,received_bytes)) != sf::Socket::Done)
+	while((status = socket->receive(buf,size,received_bytes)) != sf::Socket::Done)
 	{
 		if(status == sf::Socket::Error)
 		{
@@ -89,7 +168,7 @@ bool SFMLNetwork::receive(unsigned char* buf,unsigned int size)
 	
 	return success;
 }
-
+*/
 bool SFMLNetwork::login(const std::string& username, const std::string& password)
 {
 	bool success = false;
@@ -110,8 +189,6 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 
 	std::cout << "hash: " << hash << std::endl;
 	
-	unsigned int bufsize = NetworkCommand::length + 1 + sha1.DigestSize();
-	unsigned char* buf = (unsigned char*)std::malloc(bufsize);
 	std::cout << "sending username..." << std::endl;
 	success = send(ENC_LOGIN,username.size(),username);
 	if(!success)
@@ -121,8 +198,11 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 	}
 	std::cout << "receiving random byte..." << std::endl;
 	
-	success = receive(buf,NetworkCommand::length + 2);
-	std::cout << "DEBUG: " << buf << std::endl;
+	Packet p;
+	success = receive(p);
+	std::cout << "COMMAND: " << p.command << std::endl;
+	std::cout << "Payload: " << p.payload << std::endl;
+	
 	if(!success)
 	{
 		std::cout << "Error receiving random byte" << std::endl;
@@ -131,12 +211,12 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 	if(success)
 	{
 		std::cout << "random byte received: ";
-		std::cout << std::hex << std::setfill('0') << std::setw(2) << std::nouppercase << (unsigned short)buf[NetworkCommand::length+1];
+		std::cout << std::hex << std::setfill('0') << std::setw(2) << std::nouppercase << (unsigned short)p.payload[NetworkCommand::length+1];
 		std::cout << std::endl;
 		CryptoPP::BlockCipher* encryptor = new CryptoPP::AES::Encryption();
 		encryptor->SetKey((unsigned char*)hash.c_str(),CryptoPP::AES::MAX_KEYLENGTH);
 		unsigned char* block = (unsigned char*)std::malloc(encryptor->BlockSize());
-		std::memset(block,buf[NetworkCommand::length+1],encryptor->BlockSize());
+		std::memset(block,p.payload[NetworkCommand::length+1],encryptor->BlockSize());
 		encryptor->ProcessBlock(block);
 		std::cout << "sending back the random byte, encrypted (" << encryptor->BlockSize() << " bytes)..." << std::endl;
 		success = send(ENC_AUTHORISATION,encryptor->BlockSize(),(char*)block);
@@ -155,18 +235,18 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 	if(success)
 	{
 		std::cout << "receiving server confirmation on good/badness" << std::endl;
-		success = receive(buf,NetworkCommand::length + 5);
+		//Packet p;
+		success = receive(p);
 		if(success)
 		{
-			buf[NetworkCommand::length+5] = 0; // insert nul-terminator into the stream
-			std::cout << "Server replied: " << buf+NetworkCommand::length+1 << std::endl;
+			p.payload[NetworkCommand::length+5] = 0; // insert nul-terminator into the stream
+			std::cout << "Server replied: " << p.payload+NetworkCommand::length+1 << std::endl;
 		}
 		else
 		{
 			std::cout << "Could not retrieve server response: " << error << std::endl;
 		}
 	}
-	std::free(buf);
 	return success;
 }
 
