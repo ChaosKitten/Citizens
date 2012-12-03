@@ -6,6 +6,7 @@ std::map<std::string,command> Protocol::valid_commands = {
 		{"getpos",GETPOS}
 	};
 
+
 command Protocol::parse(const std::string& cmd) const
 {
 	if(valid_commands.count(cmd) > 0)
