@@ -34,9 +34,9 @@ bool SFMLNetwork::send(NetworkCommand c,char payload_length,const std::string& m
 {
 	bool success = false;
 	
-	char* data = (char*)std::malloc(NetworkCommand::length + payload_length + 1);
+	unsigned char* data = (unsigned char*)std::malloc(NetworkCommand::length + payload_length + 1);
 	
-	std::memcpy(data,((std::string)c).c_str(),NetworkCommand::length);
+	std::memcpy(data,c.str().c_str(),NetworkCommand::length);
 	data[NetworkCommand::length] = payload_length;
 	std::memcpy(data + NetworkCommand::length + 1,msg.c_str(),payload_length);
 	
@@ -62,10 +62,11 @@ bool SFMLNetwork::send(NetworkCommand c,char payload_length,const std::string& m
 	return success;
 }
 
-bool SFMLNetwork::receive(char* buf,unsigned int size)
+bool SFMLNetwork::receive(unsigned char* buf,unsigned int size)
 {
 	bool success = true;
 	size_t received_bytes;
+	size_t total_received;
 	sf::Socket::Status status;
 	while((status = socket.receive(buf,size,received_bytes)) != sf::Socket::Done)
 	{
@@ -75,7 +76,7 @@ bool SFMLNetwork::receive(char* buf,unsigned int size)
 			success = false;
 			break;
 		}
-		if(status == sf::Socket::Disconnected)
+		else if(status == sf::Socket::Disconnected)
 		{
 			std::stringstream errs;
 			errs << "disconnected after " << received_bytes << " bytes";
@@ -95,7 +96,7 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 	std::cout << "Attempting login" << std::endl;
 	if(username.size() > 0xFF)
 	{
-		std::cout << "Bad login: username > sizeof(char)" << std::endl;
+		std::cout << "Bad login: username length > 0xFF" << std::endl;
 		return false;
 	}
 	std::cout << "creating hash for encryption..." << std::endl;
@@ -110,9 +111,9 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 	std::cout << "hash: " << hash << std::endl;
 	
 	unsigned int bufsize = NetworkCommand::length + 1 + sha1.DigestSize();
-	char* buf = (char*)std::malloc(bufsize);
+	unsigned char* buf = (unsigned char*)std::malloc(bufsize);
 	std::cout << "sending username..." << std::endl;
-	success = send(LOGIN,username.size(),username);
+	success = send(ENC_LOGIN,username.size(),username);
 	if(!success)
 	{
 		std::cout << "Error sending username" << std::endl;
@@ -120,8 +121,8 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 	}
 	std::cout << "receiving random byte..." << std::endl;
 	
-	// limit to command+2 bytes otherwise the network stack topples over
 	success = receive(buf,NetworkCommand::length + 2);
+	std::cout << "DEBUG: " << buf << std::endl;
 	if(!success)
 	{
 		std::cout << "Error receiving random byte" << std::endl;
@@ -138,7 +139,7 @@ bool SFMLNetwork::login(const std::string& username, const std::string& password
 		std::memset(block,buf[NetworkCommand::length+1],encryptor->BlockSize());
 		encryptor->ProcessBlock(block);
 		std::cout << "sending back the random byte, encrypted (" << encryptor->BlockSize() << " bytes)..." << std::endl;
-		success = send(AUTHORISATION,encryptor->BlockSize(),(char*)block);
+		success = send(ENC_AUTHORISATION,encryptor->BlockSize(),(char*)block);
 		if(!success)
 		{
 			std::cout << "failed to return the random byte" << std::endl;

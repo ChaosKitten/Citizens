@@ -9,6 +9,8 @@
 ../common/include/NetworkCommand.hpp
 string
 -
+map
+-
 
 /home/miranda/ChaosKitten/Citizens/src/client/src/SFMLNetwork.cpp
 SFMLNetwork.hpp

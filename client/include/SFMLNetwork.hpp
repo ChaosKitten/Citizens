@@ -12,7 +12,7 @@ namespace Citizens
 		SFMLNetwork(const Protocol& p);
 		bool connect(const std::string& ip);
 		bool send(NetworkCommand c,char payload_length,const std::string& payload);
-		bool receive(char* buf,unsigned int size);
+		bool receive(unsigned char* buf,unsigned int size);
 		bool login(const std::string& username, const std::string& password);
 		std::string get_error(void);
 		bool is_disconnected(void);

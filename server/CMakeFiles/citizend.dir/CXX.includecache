@@ -6,9 +6,33 @@
 
 #IncludeRegexTransform: 
 
-/home/miranda/ChaosKitten/Citizens/src/server/src/Database.cpp
-Database.hpp
-/home/miranda/ChaosKitten/Citizens/src/server/src/Database.hpp
+../common/include/NetworkCommand.hpp
+string
+-
+map
+-
+
+/home/miranda/ChaosKitten/Citizens/src/server/src/SFMLNetwork.cpp
+SFMLNetwork.hpp
+/home/miranda/ChaosKitten/Citizens/src/server/src/SFMLNetwork.hpp
+SFML/Network.hpp
+-
+sstream
+-
+cstring
+-
+cstdlib
+-
+ctime
+-
+cryptopp/sha.h
+-
+cryptopp/aes.h
+-
+cstdio
+-
+algorithm
+-
 
 /usr/include/mysql++/beemutex.h
 exceptions.h
@@ -406,5 +430,25 @@ include/Database.hpp
 Configuration.hpp
 include/Configuration.hpp
 mysql++.h
+-
+
+include/Logger.hpp
+iostream
+-
+
+include/Network.hpp
+string
+-
+
+include/SFMLNetwork.hpp
+Network.hpp
+include/Network.hpp
+Logger.hpp
+include/Logger.hpp
+NetworkCommand.hpp
+include/NetworkCommand.hpp
+Database.hpp
+include/Database.hpp
+SFML/Network.hpp
 -
 
