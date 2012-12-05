@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE asset SYSTEM "../xml/asset.dtd">
+
+
+<asset name="hut" type="building">
+	
+	<vector type="position">
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>0.0</z>
+	</vector>
+	<vector type="orientation">
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>0.0</z>
+	</vector>
+	<vector type="scale">
+		<x>1.0</x>
+		<y>1.0</y>
+		<z>1.0</z>
+	</vector>
+	
+	<texture name="base" path="hut.tga" />
+	
+	<model path="hut.ms3d" />
+	
+	<!--<invalid></invalid>-->
+
+</asset>
