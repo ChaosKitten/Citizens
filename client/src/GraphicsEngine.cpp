@@ -45,7 +45,7 @@ irr::core::string<wchar_t> vec2str(irr::core::vector3df vec)
  * the GUIEnvironment, video driver and SceneManager fields from the device
  * Then adds the EventReceiver object as an event receiver
  * Then loads the default font and applies it to the skin
- * Finally runs the "login" scene ready for rendering on the first loop
+ * Finally sets the "login" scene ready for rendering on the first loop
  * \return a boolean indicating whether the initialisation succeeded or not
  */
 bool GraphicsEngine::init(void)
@@ -69,7 +69,8 @@ bool GraphicsEngine::init(void)
 	driver = screen->getVideoDriver();
 	scenemgr = screen->getSceneManager();
 	gui = screen->getGUIEnvironment();
-	LoginScene login(*scenemgr);
+	IScene* login = new LoginScene(*scenemgr);
+	current_scene = login;
 	
 	screen->setEventReceiver(new EventReceiver(*this,*scenemgr));
 	
@@ -77,9 +78,6 @@ bool GraphicsEngine::init(void)
 	
 	irr::gui::IGUISkin* skin = gui->getSkin();
 	skin->setFont(default_font);
-	
-	// run our login scene
-	login.init(config);
 
 	
 	/*
@@ -91,10 +89,30 @@ bool GraphicsEngine::init(void)
 }
 
 /**
+ * \brief changes the scene, obviously
+ * \details deletes the current_scene pointer and overwrites it with new_scene
+ * \param[in] new_scene a pointer to an object that implements the IScene interface
+ */
+void GraphicsEngine::change_scene(IScene* new_scene)
+{
+	if(new_scene != NULL)
+	{
+		current_scene->unload(); // otherwise that scene would be drawn as well!
+		delete current_scene; // otherwise we'd lose that pointer without deleting it, which would be bad
+		current_scene = new_scene;
+	}
+	else
+	{
+		std::cerr << "Invalid scene loaded";
+	}
+}
+
+/**
  * \brief shuts down the engine (sets 'running' to false)
  */
 void GraphicsEngine::shutdown(void)
 {
+	delete current_scene;
 	running = false;
 }
 
@@ -118,6 +136,10 @@ void GraphicsEngine::render(void)
 	if(!screen->isWindowActive()) screen->yield();
 	else
 	{
+		if(current_scene!=NULL && !current_scene->is_setup())
+		{
+			current_scene->init(config);
+		}
 		driver->beginScene(true, true, irr::video::SColor(0xFF000000));
 		scenemgr->drawAll();
 		gui->drawAll();

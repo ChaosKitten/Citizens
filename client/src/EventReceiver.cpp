@@ -1,5 +1,6 @@
 #include "EventReceiver.hpp"
 #include "ElementIDs.h"
+#include "MapScene.hpp"
 #include <iostream>
 
 using namespace Citizens;
@@ -27,6 +28,19 @@ bool EventReceiver::OnEvent(const irr::SEvent& event)
 	
 	switch(event.EventType)
 	{
+		case irr::EET_KEY_INPUT_EVENT:
+		{
+			switch(event.KeyInput.Key)
+			{
+				case irr::KEY_ESCAPE:
+				{
+					//! \todo handle irr::KEY_ESCAPE a little more delicately than just killing the whole engine
+					engine.shutdown();
+					processed = true;
+					break;
+				}
+			}
+		}
 		case irr::EET_GUI_EVENT:
 		{
 			switch(event.GUIEvent.EventType)
@@ -51,7 +65,10 @@ bool EventReceiver::OnEvent(const irr::SEvent& event)
 							const char* username_cstr = usertmp.c_str();
 							irr::core::stringc passtmp = password;
 							const char* password_cstr = passtmp.c_str();
-							engine.getNetwork()->login(username_cstr,password_cstr);
+							bool logged_in = engine.getNetwork()->login(username_cstr,password_cstr);
+							engine.getNetwork()->get_pos(engine.player.position);
+							if(logged_in)
+								engine.change_scene(new MapScene(engine.player.position,scenemgr));
 							break;
 						}
 						case QUIT_BUTTON_ID:

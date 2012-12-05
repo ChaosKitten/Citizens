@@ -1,28 +1,30 @@
-#ifndef LOGINSCENE_HPP
-#define LOGINSCENE_HPP
+#ifndef MAPSCENE_HPP
+#define MAPSCENE_HPP
 
 #include "IScene.hpp"
+#include "Coordinate.hpp"
 #include <map>
 
 namespace Citizens
 {
 
-	class LoginScene : public IScene
+	class MapScene : public IScene
 	{
 	public:
-		LoginScene(irr::scene::ISceneManager& sm);
+		MapScene(const Coordinate& c, irr::scene::ISceneManager& sm);
 		void init(const Configuration& config);
 		void unload(void);
 		bool is_setup(void);
-		irr::scene::ISceneManager& operator()();
 	private:
 		irr::scene::ISceneManager& scenemgr;
 		bool ready;
 		std::map<std::string,irr::scene::ISceneNode*> scene_nodes;
 		typedef std::map<std::string,irr::scene::ISceneNode*>::iterator scene_node_it;
+		const Coordinate& player_pos;
 	};
 
 };
 
 
 #endif
+

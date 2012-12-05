@@ -3,8 +3,7 @@
 
 using namespace Citizens;
 
-// necessary, although the compiler doesn't even warn about it for some odd reason
-LoginScene::LoginScene(irr::scene::ISceneManager& sm) : scenemgr(sm) {}
+LoginScene::LoginScene(irr::scene::ISceneManager& sm) : scenemgr(sm),ready(false) {}
 
 /**
  * \brief initialises the scene
@@ -15,6 +14,7 @@ LoginScene::LoginScene(irr::scene::ISceneManager& sm) : scenemgr(sm) {}
 void LoginScene::init(const Configuration& config)
 {
 	irr::scene::ICameraSceneNode* camera = scenemgr.addCameraSceneNode();
+	scene_nodes["camera"] = camera;
 	camera->setPosition(irr::core::vector3df(5,0,0));
 	camera->setTarget(irr::core::vector3df(0,0,0));
 	
@@ -35,6 +35,7 @@ void LoginScene::init(const Configuration& config)
 	
 	// first job: draw a background image
 	irr::scene::IBillboardSceneNode* bg_billboard = scenemgr.addBillboardSceneNode();
+	scene_nodes["background"] = bg_billboard;
 	bg_billboard->setMaterialFlag(irr::video::EMF_LIGHTING,false);
 	bg_billboard->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
 	bg_billboard->setMaterialTexture(0,scenemgr.getVideoDriver()->getTexture("art/stills/login.png"));
@@ -122,7 +123,9 @@ void LoginScene::init(const Configuration& config)
 	// AND FINALLY, the login button!
 	int login_button_height = 25;
 	int login_button_width = 70;
-	irr::gui::IGUIButton* loginButton = gui->addButton(
+	// uncomment the following line if you find a use for storing the login button in a local variable
+	//irr::gui::IGUIButton* loginButton = 
+	gui->addButton(
 		irr::core::rect<irr::s32>(
 			password_start_x,
 			password_start_y + (font->getDimension(password.c_str()).Height + 10) + 30,
@@ -138,7 +141,9 @@ void LoginScene::init(const Configuration& config)
 	// quit button stuff
 	int button_width = 70;
 	int button_height = 25;
-	irr::gui::IGUIButton* quitButton = gui->addButton(
+	// uncomment the following line if you find a use for storing the quit button in a local variable
+	//irr::gui::IGUIButton* quitButton = 
+	gui->addButton(
 		irr::core::rect<irr::s32>(
 			xres-(button_width+10),
 			yres-(button_height+15),
@@ -150,7 +155,26 @@ void LoginScene::init(const Configuration& config)
 		L"Quit",
 		L"Leaving, so soon?"
 	);
-	
+	ready = true;
+}
+
+void LoginScene::unload(void)
+{
+	for(scene_node_it i = scene_nodes.begin(); i != scene_nodes.end(); ++i)
+	{
+		i->second->remove();
+	}
+	scenemgr.getGUIEnvironment()->clear();
+}
+
+/**
+ * \brief whether or not the scene has been "loaded" or not
+ * \details used to simplify the GraphicsEngine flow
+ * \return true if the scene has been loaded, false otherwise
+ */
+bool LoginScene::is_setup(void)
+{
+	return ready;
 }
 
 /**

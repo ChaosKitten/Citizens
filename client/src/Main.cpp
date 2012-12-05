@@ -1,4 +1,4 @@
-#include "SFMLNetwork.hpp"
+#include "TestNetwork.hpp"
 #include "GraphicsEngine.hpp"
 
 #include <iostream>
@@ -10,7 +10,7 @@ using namespace Citizens;
 int main(void)
 {
 	Protocol p;
-	Network* net = new SFMLNetwork(p);
+	Network* net = new TestNetwork();
 	GraphicsEngine ge(net);
 	ge.getConfig().setProperty("xres",800);
 	ge.getConfig().setProperty("yres",600);
