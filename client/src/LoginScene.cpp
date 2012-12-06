@@ -168,6 +168,14 @@ void LoginScene::unload(void)
 }
 
 /**
+ * \brief not actually needed by LoginScene, does nothing
+ */
+void LoginScene::render(void)
+{
+	
+}
+
+/**
  * \brief whether or not the scene has been "loaded" or not
  * \details used to simplify the GraphicsEngine flow
  * \return true if the scene has been loaded, false otherwise

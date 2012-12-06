@@ -68,7 +68,7 @@ bool EventReceiver::OnEvent(const irr::SEvent& event)
 							bool logged_in = engine.getNetwork()->login(username_cstr,password_cstr);
 							engine.getNetwork()->get_pos(engine.player.position);
 							if(logged_in)
-								engine.change_scene(new MapScene(engine.player.position,scenemgr));
+								engine.change_scene(new MapScene(engine,engine.player.position,scenemgr,*engine.get_device()));
 							break;
 						}
 						case QUIT_BUTTON_ID:

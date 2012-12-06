@@ -72,6 +72,8 @@ bool GraphicsEngine::init(void)
 	IScene* login = new LoginScene(*scenemgr);
 	current_scene = login;
 	
+	driver->setTextureCreationFlag(irr::video::ETCF_ALWAYS_32_BIT, true);
+	
 	screen->setEventReceiver(new EventReceiver(*this,*scenemgr));
 	
 	irr::gui::IGUIFont* default_font = gui->getFont("fonts/myfont.xml");
@@ -143,6 +145,8 @@ void GraphicsEngine::render(void)
 		driver->beginScene(true, true, irr::video::SColor(0xFF000000));
 		scenemgr->drawAll();
 		gui->drawAll();
+		// do any custom rendering for the scene last
+		current_scene->render();
 		driver->endScene();
 	}
 	if((!screen->run() || !driver))

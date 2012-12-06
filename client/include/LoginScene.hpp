@@ -14,6 +14,7 @@ namespace Citizens
 		void init(const Configuration& config);
 		void unload(void);
 		bool is_setup(void);
+		void render(void);
 		irr::scene::ISceneManager& operator()();
 	private:
 		irr::scene::ISceneManager& scenemgr;

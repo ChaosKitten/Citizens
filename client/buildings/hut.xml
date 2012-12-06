@@ -5,25 +5,23 @@
 <asset name="hut" type="building">
 	
 	<vector type="position">
-		<x>0.0</x>
-		<y>0.0</y>
-		<z>0.0</z>
+		<x value="2000.0" />
+		<y value="0.0" />
+		<z value="2000.0" />
 	</vector>
 	<vector type="orientation">
-		<x>0.0</x>
-		<y>0.0</y>
-		<z>0.0</z>
+		<x value="0.0" />
+		<y value="0.0" />
+		<z value="0.0" />
 	</vector>
 	<vector type="scale">
-		<x>1.0</x>
-		<y>1.0</y>
-		<z>1.0</z>
+		<x value="200.0" />
+		<y value="50.0" />
+		<z value="200.0" />
 	</vector>
 	
 	<texture name="base" path="hut.tga" />
 	
 	<model path="hut.ms3d" />
-	
-	<!--<invalid></invalid>-->
 
 </asset>

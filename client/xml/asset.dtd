@@ -5,9 +5,9 @@
 <!ELEMENT texture EMPTY>
 <!ELEMENT model EMPTY>
 
-<!ELEMENT x (#PCDATA)>
-<!ELEMENT y (#PCDATA)>
-<!ELEMENT z (#PCDATA)>
+<!ELEMENT x EMPTY>
+<!ELEMENT y EMPTY>
+<!ELEMENT z EMPTY>
 
 <!ATTLIST asset
 	name CDATA #REQUIRED
@@ -25,4 +25,16 @@
 
 <!ATTLIST model 
 	path CDATA #REQUIRED
+	>
+
+<!ATTLIST x 
+	value CDATA #REQUIRED
+	>
+	
+<!ATTLIST y
+	value CDATA #REQUIRED
+	>
+
+<!ATTLIST z
+	value CDATA #REQUIRED
 	>

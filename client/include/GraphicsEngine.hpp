@@ -29,7 +29,10 @@ namespace Citizens
 		Network* getNetwork(void);
 		Configuration& getConfig(void);
 		void change_scene(IScene* new_scene);
+		irr::IrrlichtDevice* get_device(void) { return screen; };
+		
 		Player player;
+		
 	private:
 		Configuration config;
 		static inline bool is_valid(const std::string& property);

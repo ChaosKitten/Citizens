@@ -15,6 +15,7 @@ namespace Citizens
 		virtual void init(const Configuration& config) = 0;
 		virtual bool is_setup(void) = 0;
 		virtual void unload(void) = 0;
+		virtual void render(void) = 0;
 	};
 };
 
