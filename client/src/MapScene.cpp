@@ -70,7 +70,17 @@ void MapScene::init(const Configuration& config)
 	);
 	scene_nodes["camera"] = camera;
 	camera->bindTargetAndRotation(true);
-	camera->setPosition(irr::core::vector3df(player_pos.pos_x,player_pos.pos_y,player_pos.pos_z));
+	irr::core::vector3df terrain_scale(500.0f,50.0f,500.0f);
+	// note: counterintuitively, the world is based on an x,z mapping with y playing the role of 'height'.  Yeah, irrlicht's fault, not mine.
+	float ypos = 	device.getVideoDriver()->
+					createImageFromFile(heightmap.c_str())->
+					getPixel(	player_pos.pos_x * terrain_scale.X,
+								player_pos.pos_z * terrain_scale.Z)
+					.getLuminance();
+	ypos *= terrain_scale.Y;
+	ypos += 20.0f; // TODO: swap this for player's "height" attribute
+	
+	camera->setPosition(irr::core::vector3df(player_pos.pos_x,ypos,player_pos.pos_z));
 	
 	device.getCursorControl()->setVisible(false);
 	
@@ -83,7 +93,7 @@ void MapScene::init(const Configuration& config)
 		-1,
 		irr::core::vector3df(-5000.0f,-50.0f,-5000.0f),
 		irr::core::vector3df(0.0f,0.0f,0.0f),
-		irr::core::vector3df(500.0f,50.0f,500.0f),
+		terrain_scale,
 		irr::video::SColor(255,255,255,255),
 		5,
 		irr::scene::ETPS_17,
@@ -184,7 +194,7 @@ void MapScene::init(const Configuration& config)
 			index = inotify_add_watch(inotify_file,i->second.get_asset_file().c_str(),IN_MODIFY);
 			watches[index] = i->first;
 		}
-		while(engine.running) // otherwise this thread won't get cleaned up cleanly
+		while(true)
 		{
 			#define EVENT_BUFFER_SIZE (sizeof(inotify_event))
 			inotify_event event_buffer;

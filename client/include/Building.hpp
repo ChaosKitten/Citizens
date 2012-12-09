@@ -17,16 +17,7 @@ namespace Citizens
 			irr::scene::ISceneManager& sm,
 			irr::io::path af
 		);
-		/*
-		Building(
-			irr::scene::ISceneManager& sm,
-			std::string skin,
-			std::string model,
-			irr::core::vector3df position = irr::core::vector3df(0.0f,0.0f,0.0f),
-			irr::core::vector3df orientation = irr::core::vector3df(0.0f,0.0f,0.0f),
-			irr::core::vector3df scale = irr::core::vector3df(1.0f,1.0f,1.0f)
-		);
-		*/
+
 		irr::scene::IAnimatedMeshSceneNode* get_mesh_node(void);
 		void move_to(const irr::core::vector3df& new_pos);
 		void move(const irr::core::vector3df& direction, unsigned int amount);
