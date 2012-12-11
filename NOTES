@@ -1,17 +1,46 @@
-TODO list:
+TODO list legend:
+	-: item incomplete
+	/: item in progress
+	x: item complete
+	#: will-not-fix
+	!: high-priority item
+
+--BEGIN TODO LIST
 	NETWORK:
 		- finish fixing client-server authentication
-		- send back player position in AUTHR response from server
+		- send back player position from server (implement GETPOS)
+		- update player position when player moves (implement SETPOS)
 		- implement ongoing re-authentication procedures
 		- implement automatic re-connection for disconnected clients, with attempt limit and:
 			- implement "disconnected" messages on the client, allowing user to attempt reconnection without restarting client
+		- implement MapTile transmission and server-side storage of MapTiles
 	GRAPHICS:
 		- create login screen background image (placeholder)
-		- create terrain (placeholder)
-		- load world based on player position received from server
-
-DONE list:
+		- create placeholder "hut" (player home)
+		- create placeholder "hall" (workplace for mayor)
+		- create an entire placeholder MapTile for the tech demo
+		x create terrain (placeholder)
+		/ load world based on player position received from server
+		- in-game GUI (including scripting support)
+		- load and render 9 surrounding MapTiles based on current player position
+		- clean up 3 MapTiles whenever the player crosses a MapTile border
+		- implement the idea of "Zones", similarly pre-loading bordering zones when the current MapTile is on the border to the next Zone
+	FILESYSTEM:
+		- flatten terrain asset filesystem, the /x/y/ subdirectory system was ridiculous
+		- set CWD at start, make all paths relative to the known CWD from then on
+--END TODO LIST
 
 name ideas:
 	- Citizens [working title]
 	- Society
+
+
+Sending/receiving map data:
+	- I'm thinking XML for the transmission of the tiles, then MapTiles
+	  locally to turn them into something "renderable".
+	- store models, terrain and so forth locally
+	- later on support sending models and terrain down the line so the
+	  server has a tighter control on the look/feel of the game
+	- cache MapTile xml locally, so we can more quickly load "something"
+	- implement a "cache hit/cache miss" type protocol for the local cache
+	- probably put other things in the local cache too, so separate MapTiles into their own subdir
