@@ -7,7 +7,7 @@
 #include <sys/inotify.h>
 #include <thread>
 #elif _WIN32 || _WIN64
-#warning "Dynamic reloading of objects disabled on this platform"
+#warning "Dynamic reloading of objects disabled on Windows"
 #else
 #warning "Unsupported platform, dynamic reloading of objects disabled"
 #endif
@@ -71,21 +71,9 @@ void MapScene::init(const Configuration& config)
 	scene_nodes["camera"] = camera;
 	camera->bindTargetAndRotation(true);
 	irr::core::vector3df terrain_scale(500.0f,50.0f,500.0f);
-	// note: counterintuitively, the world is based on an x,z mapping with y playing the role of 'height'.  Yeah, irrlicht's fault, not mine.
-	float ypos = 	device.getVideoDriver()->
-					createImageFromFile(heightmap.c_str())->
-					getPixel(	player_pos.pos_x * terrain_scale.X,
-								player_pos.pos_z * terrain_scale.Z)
-					.getLuminance();
-	ypos *= terrain_scale.Y;
-	ypos += 20.0f; // TODO: swap this for player's "height" attribute
-	
-	camera->setPosition(irr::core::vector3df(player_pos.pos_x,ypos,player_pos.pos_z));
 	
 	device.getCursorControl()->setVisible(false);
 	
-	//! \todo rotate camera based on player's stored direction
-	camera->setTarget(irr::core::vector3df(500.0f,0.0f,500.0f));
 	
 	terrain = scenemgr.addTerrainSceneNode(
 		irr::io::path(heightmap.c_str()),
@@ -100,6 +88,17 @@ void MapScene::init(const Configuration& config)
 		8
 	);
 	scene_nodes["terrain"] = terrain;
+	
+	// note: counterintuitively, the world is based on an x,z mapping with y playing the role of 'height'.  Yeah, irrlicht's fault, not mine.
+	float ypos = terrain->getHeight(player_pos.pos_x, player_pos.pos_z);
+	
+	ypos += 20.0f; // TODO: swap this for player's "height" attribute
+	
+	camera->setPosition(irr::core::vector3df(player_pos.pos_x,ypos,player_pos.pos_z));
+	
+	//! \todo rotate camera based on player's stored direction
+	camera->setTarget(irr::core::vector3df(5000.0f,1.0f * terrain_scale.Y,5000.0f));
+	
 	
 	terrain->setMaterialTexture(
 		0,
