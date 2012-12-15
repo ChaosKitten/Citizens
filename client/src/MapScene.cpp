@@ -46,6 +46,7 @@ std::string terrain_heightmap(const Coordinate& player_pos)
 
 void MapScene::init(const Configuration& config)
 {
+	config.do_nothing(); // god, I'm such a twat
 	std::string heightmap = terrain_heightmap(player_pos);
 	std::string texture = terrain_texture(player_pos);
 	
