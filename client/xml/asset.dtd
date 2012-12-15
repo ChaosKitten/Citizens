@@ -15,7 +15,7 @@
 	>
 
 <!ATTLIST vector 
-	type (position|orientation|scale) #REQUIRED
+	type (scale) #REQUIRED
 	>
 
 <!ATTLIST texture 
