@@ -1,4 +1,4 @@
-#include "SFMLNetwork.hpp"
+#include "TestNetwork.hpp"
 #include "GraphicsEngine.hpp"
 
 #include <iostream>
@@ -9,8 +9,7 @@ using namespace Citizens;
 
 int main(void)
 {
-	Protocol p;
-	Network* net = new SFMLNetwork(p);
+	Network* net = new TestNetwork();
 	GraphicsEngine ge(net);
 	ge.getConfig().setProperty("xres",800);
 	ge.getConfig().setProperty("yres",600);
@@ -25,7 +24,8 @@ int main(void)
 	
 	ge.init();
 	
-	// offline mode needs a lot of polish, but at the moment it stops an infinite reconnection attempt loop
+	// fuck offline mode, we're just going to use this boolean during testing
+	// in the actual client, online-only.
 	bool offline_mode = false;
 	while(ge.running)
 	{

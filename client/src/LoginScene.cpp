@@ -3,12 +3,18 @@
 
 using namespace Citizens;
 
-// necessary, although the compiler doesn't even warn about it for some odd reason
-LoginScene::LoginScene(irr::scene::ISceneManager& sm) : scenemgr(sm) {}
+LoginScene::LoginScene(irr::scene::ISceneManager& sm) : scenemgr(sm),ready(false) {}
 
+/**
+ * \brief initialises the scene
+ * \details sets up a camera, gui and a background image for the Login screen
+ * \param[in] config a Configuration reference we can use to ascertain
+ * things like the x and y resolution of the screen we're drawing to
+ */
 void LoginScene::init(const Configuration& config)
 {
 	irr::scene::ICameraSceneNode* camera = scenemgr.addCameraSceneNode();
+	scene_nodes["camera"] = camera;
 	camera->setPosition(irr::core::vector3df(5,0,0));
 	camera->setTarget(irr::core::vector3df(0,0,0));
 	
@@ -29,6 +35,7 @@ void LoginScene::init(const Configuration& config)
 	
 	// first job: draw a background image
 	irr::scene::IBillboardSceneNode* bg_billboard = scenemgr.addBillboardSceneNode();
+	scene_nodes["background"] = bg_billboard;
 	bg_billboard->setMaterialFlag(irr::video::EMF_LIGHTING,false);
 	bg_billboard->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
 	bg_billboard->setMaterialTexture(0,scenemgr.getVideoDriver()->getTexture("art/stills/login.png"));
@@ -116,7 +123,9 @@ void LoginScene::init(const Configuration& config)
 	// AND FINALLY, the login button!
 	int login_button_height = 25;
 	int login_button_width = 70;
-	irr::gui::IGUIButton* loginButton = gui->addButton(
+	// uncomment the following line if you find a use for storing the login button in a local variable
+	//irr::gui::IGUIButton* loginButton = 
+	gui->addButton(
 		irr::core::rect<irr::s32>(
 			password_start_x,
 			password_start_y + (font->getDimension(password.c_str()).Height + 10) + 30,
@@ -132,7 +141,9 @@ void LoginScene::init(const Configuration& config)
 	// quit button stuff
 	int button_width = 70;
 	int button_height = 25;
-	irr::gui::IGUIButton* quitButton = gui->addButton(
+	// uncomment the following line if you find a use for storing the quit button in a local variable
+	//irr::gui::IGUIButton* quitButton = 
+	gui->addButton(
 		irr::core::rect<irr::s32>(
 			xres-(button_width+10),
 			yres-(button_height+15),
@@ -144,9 +155,44 @@ void LoginScene::init(const Configuration& config)
 		L"Quit",
 		L"Leaving, so soon?"
 	);
+	ready = true;
+}
+
+void LoginScene::unload(void)
+{
+	for(scene_node_it i = scene_nodes.begin(); i != scene_nodes.end(); ++i)
+	{
+		i->second->remove();
+	}
+	scenemgr.getGUIEnvironment()->clear();
+}
+
+/**
+ * \brief not actually needed by LoginScene, does nothing
+ */
+void LoginScene::render(void)
+{
 	
 }
 
+/**
+ * \brief whether or not the scene has been "loaded" or not
+ * \details used to simplify the GraphicsEngine flow
+ * \return true if the scene has been loaded, false otherwise
+ */
+bool LoginScene::is_setup(void)
+{
+	return ready;
+}
+
+/**
+ * \brief I forget what this function is for, I think it was originally to
+ * shut the compiler up about 'scenemgr' being unused.  I think it's
+ * redundant now.  The only clue to its usage is a code comment
+ * that reads "I feel like a collosal dick for doing this, but oh well".
+ * Man, I should really get better at commenting things.
+ * \warning probably getting deleted sometime soon
+ */
 // I feel like a collosal dick for doing this, but oh well
 irr::scene::ISceneManager& LoginScene::operator()()
 {
