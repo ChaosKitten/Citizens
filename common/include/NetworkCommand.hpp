@@ -10,7 +10,7 @@ namespace Citizens
 	{
 		ENC_LOGIN,
 		ENC_AUTHORISATION,
-		ENC_NO_COMMAND, // this command is used for transmitting 'anonymous' data to and fro, its usefulness is yet to be proven, however.
+		ENC_NO_COMMAND, // unproven usefulness (candidate for deletion?)
 		ENC_INVALID
 	};
 	class NetworkCommand
