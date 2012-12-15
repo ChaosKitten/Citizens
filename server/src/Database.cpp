@@ -49,6 +49,7 @@ bool Database::connect(db_config c)
 	config = c;
 	return connect();
 }
+
 std::string Database::get_error(void)
 {
 	return error;
@@ -135,7 +136,7 @@ bool Database::get_authinfo(const std::string& username,std::string& auth,bool& 
 		if(result.num_rows() == 0) { return false; }
 		// mysqlpp is a bit lacking, it sends back out 2D arrays of [col][row]:
 		auth = static_cast<std::string>(result[0][0]);
-		online = (result[0][1] == "0");
+		online = (result[0][1] != "0");
 		return true;
 	} catch (mysqlpp::BadQuery e) {
 		error = e.what();

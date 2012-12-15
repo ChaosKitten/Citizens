@@ -12,11 +12,16 @@ namespace Citizens
 	struct ClientData
 	{
 		std::string username;
-		char token; // randomised number unique to each connection
+		unsigned char token; // randomised number unique to each connection
 		std::string auth; // retrieved from the database when the username is sent
-		sf::TcpSocket* sock;
+		sf::TcpSocket* socket;
 		bool bad_user;
 		bool authorised;
+		unsigned char* packet;
+		unsigned int packet_size;
+		unsigned int packet_expected;
+		bool disconnected;
+		bool online;
 	};
 	class SFMLNetwork : public Network
 	{
@@ -24,9 +29,6 @@ namespace Citizens
 		SFMLNetwork(Logger& log,Database& db);
 		~SFMLNetwork();
 		bool listen(const unsigned short port);
-		bool send(const std::string& msg);
-		bool receive(std::string& result);
-		bool login(const std::string& username, const std::string& password);
 		std::string get_error(void);
 		bool tick(void);
 		void stopThread(void);
@@ -37,9 +39,11 @@ namespace Citizens
 		Logger& logger;
 		Database& database;
 		bool running;
-		unsigned int expected_size;
 		bool command_mode;
 		NetworkCommand last_command;
+		bool send_byte(ClientData client,const unsigned char& byte,bool& sent);
+		bool get_byte(ClientData& client,unsigned char& byte);
+		bool send_all(ClientData client,const unsigned char* data, const unsigned int size);
 	};
 };
 

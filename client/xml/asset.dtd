@@ -1,0 +1,40 @@
+<!ELEMENT asset (description?,name?,vector*,texture,model)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT vector (x|y|z)*>
+<!ELEMENT texture EMPTY>
+<!ELEMENT model EMPTY>
+
+<!ELEMENT x EMPTY>
+<!ELEMENT y EMPTY>
+<!ELEMENT z EMPTY>
+
+<!ATTLIST asset
+	name CDATA #REQUIRED
+	type (building|player) #REQUIRED
+	>
+
+<!ATTLIST vector 
+	type (scale) #REQUIRED
+	>
+
+<!ATTLIST texture 
+	name CDATA #REQUIRED
+	path CDATA #REQUIRED
+	>
+
+<!ATTLIST model 
+	path CDATA #REQUIRED
+	>
+
+<!ATTLIST x 
+	value CDATA #REQUIRED
+	>
+	
+<!ATTLIST y
+	value CDATA #REQUIRED
+	>
+
+<!ATTLIST z
+	value CDATA #REQUIRED
+	>

@@ -15,6 +15,12 @@ namespace Citizens
 		
 		Configuration();
 		
+		//! I am a total douche, implementing a compiler gag
+		//! because IScene::init() takes it as a parameter
+		//! but not every inherited class needs it
+		//! so the compiler complains
+		void do_nothing(void) const {}
+		
 		template<class value_t>
 		bool setProperty(const std::string& name,const value_t& value);
 		

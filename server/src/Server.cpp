@@ -13,7 +13,7 @@
 
 using namespace Citizens;
 
-Server::Server(Options& o,Network& n,Logger& l,Database& d) : opt(o), logger(l), net(n), db(d)
+Server::Server(Options& o,Network& n,Logger& l,Database& d) : opt(o), db(d), logger(l), net(n)
 {
 	errnum = NONE;
 	running = false;

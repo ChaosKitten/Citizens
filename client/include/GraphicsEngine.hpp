@@ -3,6 +3,8 @@
 
 #include "Network.hpp"
 #include "Configuration.hpp"
+#include "IScene.hpp"
+#include "Coordinate.hpp"
 #include <map>
 #include <string>
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -11,6 +13,10 @@
 
 namespace Citizens
 {
+	struct Player
+	{
+		Coordinate position;
+	};
 	class GraphicsEngine
 	{
 	public:
@@ -22,10 +28,16 @@ namespace Citizens
 		void shutdown(void);
 		Network* getNetwork(void);
 		Configuration& getConfig(void);
+		void change_scene(IScene* new_scene);
+		irr::IrrlichtDevice* get_device(void) { return screen; };
+		
+		Player player;
+		
 	private:
 		Configuration config;
 		static inline bool is_valid(const std::string& property);
 		Network* net;
+		IScene* current_scene;
 		
 		// irrlicht stuff
 		irr::IrrlichtDevice* screen;

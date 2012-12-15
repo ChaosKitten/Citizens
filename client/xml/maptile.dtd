@@ -1,0 +1,39 @@
+<!ELEMENT maptile (coordinates,asset*,building*,splat*)>
+<!ELEMENT coordinates EMPTY>
+<!ELEMENT asset (name,file)>
+<!ELEMENT building (location,asset)>
+<!ELEMENT location (vector)>
+<!ELEMENT vector (x,y,z)>
+<!ELEMENT splat (texture)>
+<!ELEMENT texture (#PCDATA)>
+
+<!ATTLIST maptile
+	>
+
+<!ATTLIST coordinates
+	x CDATA #REQUIRED
+	y CDATA #REQUIRED
+	>
+
+<!ATTLIST asset
+	type (building)
+	>
+
+<!ATTLIST building
+	>
+
+<!ATTLIST location
+	>
+	
+<!ATTLIST vector 
+	type (scale|orientation|position) #REQUIRED
+	x CDATA "1"
+	y CDATA "1"
+	z CDATA "1"
+	>
+
+<!ATTLIST splat
+	>
+
+<!ATTLIST texture
+	>
