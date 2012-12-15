@@ -14,6 +14,7 @@ namespace Citizens
 		std::string get_error(void);
 		bool is_disconnected(void);
 		void get_pos(Coordinate& c);
+		irr::io::IXMLReader* get_XML(const std::string& resource_name);
 	};
 	
 };

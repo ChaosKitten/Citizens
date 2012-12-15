@@ -21,6 +21,7 @@ namespace Citizens
 		virtual std::string get_error(void) = 0;
 		virtual bool is_disconnected(void) = 0;
 		virtual void get_pos(Coordinate& c) = 0;
+		virtual irr::io::IXMLReader* get_XML(const std::string& resource_name) = 0;
 	};
 	
 };

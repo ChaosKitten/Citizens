@@ -16,7 +16,7 @@ namespace Citizens
 	class SFMLNetwork : public Network
 	{
 	public:
-		SFMLNetwork(const Protocol& p);
+		SFMLNetwork();
 		~SFMLNetwork();
 		bool connect(const std::string& ip);
 		bool send(NetworkCommand c,char payload_length,const std::string& payload);
@@ -24,8 +24,8 @@ namespace Citizens
 		bool login(const std::string& username, const std::string& password);
 		std::string get_error(void);
 		bool is_disconnected(void);
+		irr::io::IXMLReader* get_XML(const std::string& resource_name);
 	private:
-		const Protocol& protocol;
 		std::string error;
 		sf::TcpSocket* socket;
 		bool disconnected;

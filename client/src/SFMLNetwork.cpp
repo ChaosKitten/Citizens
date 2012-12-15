@@ -18,12 +18,8 @@ using namespace Citizens;
 
 /**
  * \brief constructs an SFMLNetwork object
- * \param[in] p a Protocol reference
- * \note in future the Protocol class may be made 100% static and therefore
- * references to it will be somewhat meaningless and wasteful, this
- * is one area for clean-up if that ever becomes the case
  */
-SFMLNetwork::SFMLNetwork(const Protocol& p) : protocol(p), disconnected(true) 
+SFMLNetwork::SFMLNetwork() : disconnected(true) 
 {
 	socket = new sf::TcpSocket();
 	socket->setBlocking(true);
@@ -55,7 +51,7 @@ bool SFMLNetwork::connect(const std::string& ip)
 	bool success = false; // assume false unless proven otherwise
 	
 	sf::IpAddress server_ip(ip);
-	success = (socket->connect(server_ip,protocol.port) == sf::Socket::Done);
+	success = (socket->connect(server_ip,Protocol::port) == sf::Socket::Done);
 	disconnected = !success;
 	if(!success) error = "connection attempt failed";
 	
@@ -296,4 +292,14 @@ bool SFMLNetwork::is_disconnected(void)
 std::string SFMLNetwork::get_error(void)
 {
 	return error;
+}
+
+/**
+ * \brief fetch an XML resource over the network
+ * \return an XML reader resource if it could be fetched, or NULL
+ * \todo implement this method
+ */
+irr::io::IXMLReader* SFMLNetwork::get_XML(const std::string& resource_name)
+{
+	return NULL;
 }

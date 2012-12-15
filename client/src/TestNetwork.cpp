@@ -35,11 +35,20 @@ void TestNetwork::get_pos(Coordinate& c)
 	c.zone_y = 0;
 	c.area_x = 0;
 	c.area_y = 0;
-	c.pos_x = 0;
-	c.pos_y = 0;
+	c.pos_x = 50;
+	c.pos_y = 50;
 	c.pos_z = 10;
 	c.dir_x = 180.0f;
 	c.dir_y = 0;
 	c.dir_z = 0;
 }
+
+/**
+ * \todo implement this method
+ */
+irr::io::IXMLReader* TestNetwork::get_XML(const std::string& resource_name)
+{
+	return NULL;
+}
+
 #pragma GCC diagnostic pop
