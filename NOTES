@@ -18,16 +18,19 @@ TODO list legend:
 		- create login screen background image (placeholder)
 		- create placeholder "hut" (player home)
 		- create placeholder "hall" (workplace for mayor)
-		- create an entire placeholder MapTile for the tech demo
+		- create an entire placeholder Zone for the tech demo (village is 1x1 zones)
 		x create terrain (placeholder)
 		/ load world based on player position received from server
 		- in-game GUI (including scripting support)
-		- load and render 9 surrounding MapTiles based on current player position
+		- preload 8 surrounding MapTiles based on current player position
 		- clean up 3 MapTiles whenever the player crosses a MapTile border
+		- preload 3 MapTiles (if available) whenever the player crosses a MapTile border
 		- implement the idea of "Zones", similarly pre-loading bordering zones when the current MapTile is on the border to the next Zone
 	FILESYSTEM:
 		- flatten terrain asset filesystem, the /x/y/ subdirectory system was ridiculous
 		- set CWD at start, make all paths relative to the known CWD from then on
+	XML:
+		- bring asset.dtd vectors (and related code) in line with maptile.dtd vectors
 --END TODO LIST
 
 name ideas:
