@@ -26,10 +26,10 @@ namespace Citizens
 		void turn_r(const irr::core::vector3df& axes, float angle_rad);
 		void reload(bool and_reset = true);
 		irr::io::path get_asset_file(void) { return asset_file; }
-		
+		void unload(void);
+		typedef irr::scene::IAnimatedMeshSceneNode node_type;
 	private:
 		void reset(void);
-		
 		
 		irr::io::path asset_file;
 		irr::scene::ISceneManager& sm;
@@ -40,7 +40,8 @@ namespace Citizens
 		irr::core::vector3df position;
 		irr::core::vector3df orientation;
 		irr::core::vector3df scale;
-		irr::scene::IAnimatedMeshSceneNode* mesh_node;
+		
+		node_type* mesh_node;
 	};
 
 };
