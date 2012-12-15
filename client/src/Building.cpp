@@ -160,6 +160,11 @@ void Building::reset(void)
 	mesh_node->setMaterialFlag(irr::video::EMF_BACK_FACE_CULLING, true);
 }
 
+void Building::unload(void)
+{
+	mesh_node->remove();
+}
+
 irr::scene::IAnimatedMeshSceneNode* Building::get_mesh_node(void)
 {
 	return mesh_node;
