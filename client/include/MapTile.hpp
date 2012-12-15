@@ -18,12 +18,16 @@ namespace Citizens
 		MapTile();
 		MapTile(const MapTile& mt);
 		void load(const irr::io::path& from_file);
+		// split render from load
+		void render();
 		void unload(void);
 	private:
 		// describes all the buildings available to the map tile for rendering
 		std::map<std::string,Building> building_pool;
+		// a texture to place over the terrain
 		irr::video::ITexture* terrain_splat;
-		std::map<Coordinate,Building> buildings;
+		// all the buildings that occupy this particular map tile.
+		std::map<Coordinate,Building::node_type*> buildings;
 	};
 
 };

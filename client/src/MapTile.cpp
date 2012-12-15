@@ -4,9 +4,12 @@ using namespace Citizens;
 
 void MapTile::unload(void)
 {
-	std::map<Coordinate,Building>::iterator i;
+	std::map<Coordinate,Building::node_type*>::iterator i;
 	for(i = buildings.begin(); i != buildings.end(); ++i)
 	{
-		i->second.unload();
+		i->second->remove();
 	}
+	buildings.clear();
+	building_pool.clear();
+	
 }
