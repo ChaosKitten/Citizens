@@ -4,7 +4,9 @@ using namespace Citizens;
 
 irr::io::IXMLReader* CachedXML::fetch()
 {
-	if(!fetch_disk()) fetch_net();
+	// bypass both the disk and the network if we have it in memory
+	if(data == NULL) if(!fetch_disk()) fetch_net();
+	return data;
 }
 
 void CachedXML::fetch_net()
@@ -15,9 +17,11 @@ void CachedXML::fetch_net()
 bool CachedXML::fetch_disk()
 {
 	bool hit = false;
-	if(file_system.fileExists("cache/"+resource_name))
+	irr::core::stringw resource_path = L"cache/";
+	resource_path.append(resource_name.c_str());
+	if(file_system.existFile(resource_path))
 	{
-		data = file_system.createXMLReader("cache/"+resource_name);
+		data = file_system.createXMLReader(resource_path);
 		hit = true;
 	}
 	return hit;

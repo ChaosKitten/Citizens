@@ -13,7 +13,7 @@ namespace Citizens
 	class CachedXML
 	{
 	public:
-		CachedXML(const std::string& rn,const irr::io::IFileSystem& fs,const Network& n) : resource_name(rn),file_system(fs),network(n) { data = NULL; }
+		CachedXML(const std::string& rn,irr::io::IFileSystem& fs,Network& n) : resource_name(rn),file_system(fs),network(n) { data = NULL; }
 		~CachedXML() { delete data; }
 		irr::io::IXMLReader* fetch(void);
 	private:
@@ -22,8 +22,8 @@ namespace Citizens
 		bool fetch_disk(void);
 		void cache(void);
 		const std::string& resource_name;
-		const irr::io::IFileSystem& file_system;
-		const Network& network;
+		irr::io::IFileSystem& file_system;
+		Network& network;
 		
 		irr::io::IXMLReader* data;
 
