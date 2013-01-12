@@ -3,12 +3,13 @@
 
 namespace citi
 {
+	typedef unsigned long int TSerial;
 	template<class InheritedType>
 	class ISerializable
 	{
 	public:
-		virtual void serialize(void) = 0;
-		virtual InheritedType* deserialize(void) = 0;
+		virtual TSerial serialize(void) = 0;
+		virtual void deserialize(TSerial s) = 0;
 	};
 };
 

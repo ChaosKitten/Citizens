@@ -9,8 +9,8 @@ namespace citi
 	{
 	public:
 		virtual void render(void) = 0;
-		virtual void serialize(void) = 0;
-		virtual ICityMap* deserialize(void) = 0;
+		virtual citi::TSerial serialize(void) = 0;
+		virtual void deserialize(citi::TSerial s) = 0;
 	};
 };
 
