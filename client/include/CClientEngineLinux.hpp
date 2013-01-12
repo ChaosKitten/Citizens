@@ -8,8 +8,9 @@ namespace citi
 	class CClientEngineLinux : public IClientEngine
 	{
 	public:
+		~CClientEngineLinux();
 		void run(void);
-		virtual IScene* create_menu_scene(const std::string& menu_file);
+		virtual IScene* create_menu_scene(IMenuPage* page = new CLoginMenuPage());
 		virtual IScene* create_overview_scene(ICityMap* map);
 	private:
 		IScene* current_scene;
