@@ -1,13 +1,19 @@
 #ifndef ICLIENT_ENGINE_HPP
 #define ICLIENT_ENGINE_HPP
 
+#include <string>
 // first the class definition (most important part of the file)
 namespace citi
 {
+	// forward-declare these so we don't bump into each other
+	class IScene; 
+	class ICityMap;
 	class IClientEngine
 	{
 	public:
 		virtual void run(void) = 0;
+		virtual IScene* create_menu_scene(const std::string& menu_file) = 0;
+		virtual IScene* create_overview_scene(ICityMap* map) = 0;
 	};
 };
 
