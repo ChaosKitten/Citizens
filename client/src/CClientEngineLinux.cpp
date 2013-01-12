@@ -9,15 +9,19 @@
 
 void citi::CClientEngineLinux::run(void)
 {
-	current_scene = this->create_menu_scene("main_menu.xml");
+	current_scene = this->create_menu_scene();
 }
 
-citi::IScene* citi::CClientEngineLinux::create_menu_scene(const std::string& menu_file)
+citi::IScene* citi::CClientEngineLinux::create_menu_scene(citi::IMenuPage* page)
 {
-	return NULL; // for now
+	return NULL;
 }
 
 citi::IScene* citi::CClientEngineLinux::create_overview_scene(citi::ICityMap* map)
 {
 	return new COverviewScene(map);
+}
+
+citi::CClientEngineLinux::~CClientEngineLinux()
+{
 }
