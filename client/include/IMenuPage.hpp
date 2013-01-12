@@ -7,7 +7,8 @@ namespace citi
 	class IMenuPage
 	{
 	public:
-		IMenuPage(const std::string& page) {}
+		virtual void render(void) = 0;
+	protected:
 	};
 };
 
