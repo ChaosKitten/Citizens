@@ -1,6 +1,8 @@
 #ifndef ICLIENT_ENGINE_HPP
 #define ICLIENT_ENGINE_HPP
 
+#include "IMenuPage.hpp"
+#include "CLoginMenuPage.hpp"
 #include <string>
 // first the class definition (most important part of the file)
 namespace citi
@@ -12,7 +14,7 @@ namespace citi
 	{
 	public:
 		virtual void run(void) = 0;
-		virtual IScene* create_menu_scene(const std::string& menu_file) = 0;
+		virtual IScene* create_menu_scene(IMenuPage* page = new CLoginMenuPage()) = 0;
 		virtual IScene* create_overview_scene(ICityMap* map) = 0;
 	};
 };
